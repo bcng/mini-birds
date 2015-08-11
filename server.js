@@ -30,10 +30,7 @@ app.post('/api/sighting', function(req, res) {
 })
 
 app.get('/api/sighting', function(req, res) {
-    db.sightings.find({
-        region: 'america',
-        species: 'redrobin'
-    }, function(err, birds) {
+    db.sightings.find(req.query, function(err, birds) {
         if (err) {
             return res.status(500).json(err);
         } else {
@@ -45,15 +42,25 @@ app.get('/api/sighting', function(req, res) {
 })
 
 app.delete('/api/sighting', function(req, res) {
-    db.sightings.remove()
+    db.sightings.remove(req.query, function(err, result) {
+        if (!err) {
+            res.json(result);
+        } else {
+            res.status(418).json(err);
+        }
+    })
     console.log('delete hit');
-    res.end();
 })
 
 app.put('/api/sighting', function(req, res) {
-    db.sightings.findAndModify()
+    db.sightings.update(req.query, req.body, function(err, result) {
+    	if (!err) {
+    		res.json(result);
+    	} else {
+    		res.status(418).son(err);
+    	}
+    })
     console.log('put hit');
-    res.end();
 })
 
 //API connection
